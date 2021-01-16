@@ -1,0 +1,23 @@
+# property configurator test file
+
+log4cpp.rootCategory=ERROR, rootAppender
+
+# Spinnaker logging configurations
+log4cpp.category.SpinnakerConsole=ERROR, rootAppender
+log4cpp.category.Spinnaker=ERROR, Spinnaker
+
+# GenTL logging configurations
+log4cpp.category.GenTLConsole=FATAL, rootAppender
+log4cpp.category.GenTL=ERROR, Spinnaker
+
+log4cpp.appender.rootAppender=ConsoleAppender
+log4cpp.appender.rootAppender.layout=PatternLayout
+log4cpp.appender.rootAppender.layout.ConversionPattern=[%p %c] %d [%t] %m%n 
+
+log4cpp.appender.Spinnaker=RollingFileAppender
+log4cpp.appender.Spinnaker.fileName=$(ALLUSERSPROFILE)\Spinnaker\Shared\Logs\Spinnaker.log
+log4cpp.appender.Spinnaker.append=true
+log4cpp.appender.Spinnaker.maxFileSize=1000000
+log4cpp.appender.Spinnaker.maxBackupIndex=5
+log4cpp.appender.Spinnaker.layout=PatternLayout
+log4cpp.appender.Spinnaker.layout.ConversionPattern=[%p %c] %d [%t] %m%n 

@@ -1,0 +1,116 @@
+;//=============================================================================
+;// Copyright © 2017 FLIR Integrated Imaging Solutions, Inc. All Rights Reserved.
+;//
+;// This software is the confidential and proprietary information of FLIR
+;// Integrated Imaging Solutions, Inc. ("Confidential Information"). You
+;// shall not disclose such Confidential Information and shall use it only in
+;// accordance with the terms of the license agreement you entered into
+;// with FLIR Integrated Imaging Solutions, Inc. (FLIR).
+;//
+;// FLIR MAKES NO REPRESENTATIONS OR WARRANTIES ABOUT THE SUITABILITY OF THE
+;// SOFTWARE, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+;// IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+;// PURPOSE, OR NON-INFRINGEMENT. FLIR SHALL NOT BE LIABLE FOR ANY DAMAGES
+;// SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING
+;// THIS SOFTWARE OR ITS DERIVATIVES.
+;//=============================================================================
+
+
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=PGRDevices
+ClassGUID={1354185D-3C13-4b72-BFF9-9EA802513D34}
+Provider=%PGR%
+DriverVer=10/05/2018,2.7.3.249
+CatalogFile=PGRUSBCam3.cat
+
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=PGRUSBCam3ClassReg     
+
+[PGRUSBCam3ClassReg]
+HKR,,,0,%PGRCAMClassName%
+HKR,,Icon,,-20
+
+
+; ================= Device section =====================
+
+[Manufacturer]
+%MfgName%=PGR,NTamd64
+
+; For XP and later
+[PGR.NTamd64]
+%USB\VID_1E10&PID_4000&MI_00.DeviceDesc%=PGRUSBCam3.Dev, USB\VID_1E10&PID_4000&MI_00
+
+
+[PGRUSBCam3.Dev.NT]
+CopyFiles=PGRUSBCam3.Files.Ext
+AddReg=PGRUSBCam3.AddReg
+
+
+[PGRUSBCam3.Dev.NT.Services]
+Addservice = PGRUSBCam3, %SPSVCINST_ASSOCSERVICE%, PGRUSBCam3.AddService
+
+[PGRUSBCam3.AddService]
+DisplayName    = %PGRUSBCam3.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\PGRUSBCam3.sys
+AddReg         = PGRUSBCam3.AddReg
+LoadOrderGroup = Base
+
+[PGRUSBCam3.AddReg]
+;HKR, Parameters\Wdf, VerboseOn,       0x00010001, 1
+;HKR, Parameters\Wdf, VerifierOn,      0x00010001, 1
+;HKR, Parameters\Wdf, DbgBreakOnError, 0x00010001, 1
+HKR,,NTMPDriver,,pgrusbcam3.sys
+
+
+[PGRUSBCam3.Files.Ext]
+PGRUSBCam3.sys
+
+[SourceDisksNames]
+1=%Disk_Description%,,,
+
+[SourceDisksFiles]
+PGRUSBCam3.sys = 1
+wdfcoinstaller01009.dll=1 ; make sure the number matches with SourceDisksNames
+
+[DestinationDirs]
+DefaultDestDir = 12
+CoInstaller_CopyFiles = 11
+
+;-------------- WDF Coinstaller installation
+
+[PGRUSBCam3.Dev.NT.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CoInstaller_CopyFiles]
+wdfcoinstaller01009.dll
+
+[CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "wdfcoinstaller01009.dll,WdfCoInstaller"
+
+[PGRUSBCam3.Dev.NT.Wdf]
+KmdfService = PGRUSBCam3, PGRUSBCam3_wdfsect
+[PGRUSBCam3_wdfsect]
+KmdfLibraryVersion = 1.9
+
+;---------------------------------------------------------------;
+
+[Strings]
+PGR="Point Grey Research"
+MfgName="Point Grey Research"
+Disk_Description="PGRUSBCam3 Installation Disk"
+USB\VID_1E10&PID_4000&MI_00.DeviceDesc="FLIR USB3 Vision Camera"
+
+
+
+PGRUSBCam3.SvcDesc="FLIR U3V Camera"
+PGRCAMClassName="FLIR USB Camera"
+SPSVCINST_ASSOCSERVICE= 0x00000002
